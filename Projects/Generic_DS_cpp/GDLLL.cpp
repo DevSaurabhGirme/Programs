@@ -1,0 +1,233 @@
+/////////////////////////////////////////////////////////////////
+///////////////////
+////  Below is the generic Doubly Linear LinkedList code ////
+///    Name   :   Saurabh Girme	 							  						  ///
+///    Date   :   16/06/2022      						  									  ///
+///    Time   :   4:50 pm         						  										 ///
+///////////////////
+////////////////////////////////////////////////////////////////
+
+#include <iostream>
+using namespace std;
+
+template <class T>
+struct node // structure declaration
+{
+    T data;
+    struct node *next;
+    struct node *prev;
+};
+
+template <class T>
+class DoublyLL // class declaration
+{
+private: // characteristics
+    struct node<T> *Head;
+    int Count;
+
+public:         // behaviours
+    DoublyLL(); // constructor
+    void InsertFirst(T);
+    void InsertLast(T);
+    void Display();
+    int CountNode();
+    void DeleteFirst();
+    void DeleteLast();
+    void InsertAtPos(T, int pos);
+    void DeleteAtPos(int pos);
+};
+
+template <class T>
+DoublyLL<T>::DoublyLL()
+{
+    Head = NULL;
+    Count = 0;
+}
+
+template <class T>
+void DoublyLL<T>::InsertFirst(T value)
+{
+    struct node<T> *newn = NULL;
+    newn = new node<T>;
+
+    newn -> data = value;
+    newn -> next = NULL;
+    newn -> prev = NULL;
+
+    if (Head == NULL)
+    {
+        Head = newn;
+    }
+    else
+    {
+        newn->next = Head;
+        Head = newn;
+    }
+    Count++;
+}
+
+template <class T>
+void DoublyLL<T>::InsertLast(T value)
+{
+    struct node<T> *newn = NULL;
+    newn = new node<T>;
+
+    newn->data = value;
+    newn->next = NULL;
+    newn -> prev = NULL;
+
+    if (Head == NULL)
+    {
+        Head = newn;
+    }
+    else
+    {
+        struct node<T> *temp = Head;
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        newn -> next = temp -> next;
+        temp->next = newn;
+        newn -> prev= temp;
+    }
+    Count++;
+}
+
+template <class T>
+void DoublyLL<T>::DeleteFirst()
+{
+    struct node<T> *temp = Head;
+    if (Head == NULL)
+    {
+        return;
+    }
+
+    temp = temp->next;
+    temp -> prev = NULL;
+    delete Head;
+    Head = temp;
+
+    Count--;
+}
+
+template <class T>
+void DoublyLL<T>::DeleteLast()
+{
+    struct node<T> *temp = Head;
+
+    if (Head->next == NULL)
+    {
+        delete Head;
+        Head = NULL;
+    }
+    else
+    {
+        while ((temp->next) != NULL)
+        {
+            temp = temp->next;
+        }
+        temp->prev->next = NULL;
+        delete temp;
+    }
+    Count--;
+}
+
+template <class T>
+void DoublyLL<T>::InsertAtPos(T value, int pos)
+{
+    if (Head == NULL)
+    {
+        return;
+    }
+
+    struct node<T> *temp = Head;
+    struct node<T> *newn = NULL;
+    newn = new node<T>;
+    newn->data = value;
+    newn->next = NULL;
+    newn -> prev = NULL;
+
+    if ((pos <= 0) || (pos > (Count + 1)))
+    {
+        return;
+    }
+
+    if (pos == 1)
+    {
+        InsertFirst(value);
+    }
+    else if (pos == Count)
+    {
+        InsertLast(value);
+    }
+    else
+    {
+        for (int iCnt = 1; iCnt < (pos - 1); iCnt++)
+        {
+            temp = temp->next;
+        }
+        newn->next = temp->next;
+        temp->next->prev = newn;
+        newn -> prev = temp;
+        temp -> next = newn;
+
+        Count++;
+    }
+}
+
+template <class T>
+void DoublyLL<T>::DeleteAtPos(int pos)
+{
+    if ((pos < 1) || (pos > Count + 1))
+    {
+        return;
+    }
+    if(pos == 1)
+    {
+        DeleteFirst();
+    }
+    else if (pos == Count)
+    {
+        DeleteLast();
+    }
+
+    else
+    {
+        struct node<T> *temp = Head;
+
+        for (int iCnt = 1; iCnt < (pos - 1); iCnt++)
+        {
+            temp = temp->next;
+        }
+        temp->next->prev = NULL;
+        temp->next = temp->next->next;
+        delete temp->next->prev;
+        temp->next->prev = temp;
+
+        Count--;
+    }
+}
+
+template <class T>
+void DoublyLL<T>::Display()
+{
+    cout << "Nodes of the Linked List are : " << endl;
+    struct node<T> *temp = Head;
+    while (temp != NULL)
+    {
+        cout << "| " << temp->data << " | ->";
+        temp = temp->next;
+    }
+    cout << " NULL" << endl;
+}
+
+template <class T>
+int DoublyLL<T>::CountNode()
+{
+    return Count;
+}
+
+
+
+////////////////////////	END	////////////////////////////
